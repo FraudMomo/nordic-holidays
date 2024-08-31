@@ -1,4 +1,3 @@
-"use strict";
 /* Helper functions */
 const modulo = (a, b) => ((a % b) + b) % b;
 const performFloorDivision = (a, b) => Math.floor(a / b);
@@ -198,7 +197,7 @@ const checkForMoveableHoliday = (date, country) => {
     }
     return "";
 };
-const checkHoliday = (date, country) => {
+export const checkHoliday = (date, country) => {
     const fixedHoliday = checkForFixedHoliday(date, country);
     if (fixedHoliday) {
         return fixedHoliday;
@@ -209,7 +208,7 @@ const checkHoliday = (date, country) => {
     }
     return "";
 };
-const getHolidays = (year, country) => {
+export const getHolidays = (year, country) => {
     const holidays = [];
     /* Fixed holidays general */
     for (const holiday in fixedHolidays.general) {
