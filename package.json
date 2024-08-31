@@ -2,6 +2,7 @@
   "name": "nordic-holidays",
   "version": "1.0.1",
   "main": "nordic-holidays.js",
+  "type": "module",
   "devDependencies": {
     "typescript": "^5.5.4"
   },
