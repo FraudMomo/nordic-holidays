@@ -258,7 +258,7 @@ const checkForMoveableHoliday = (
   return "";
 };
 
-const checkHoliday = (date: string, country: CountryCode): string => {
+export const checkHoliday = (date: string, country: CountryCode): string => {
   const fixedHoliday = checkForFixedHoliday(date, country);
   if (fixedHoliday) {
     return fixedHoliday;
@@ -270,7 +270,7 @@ const checkHoliday = (date: string, country: CountryCode): string => {
   return "";
 };
 
-const getHolidays = (year: number, country: CountryCode): string[] => {
+export const getHolidays = (year: number, country: CountryCode): string[] => {
   const holidays: string[] = [];
   /* Fixed holidays general */
   for (const holiday in fixedHolidays.general) {
