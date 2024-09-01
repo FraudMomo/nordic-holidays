@@ -1,12 +1,23 @@
 {
   "name": "nordic-holidays",
   "version": "1.0.2",
-  "main": "nordic-holidays.js",
-  "type": "module",
+  "main": "./dist/nordic-holidays.js",
+  "module": "./dist/nordic-holidays.mjs",
+  "types": "./dist/nordic-holidays.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/nordic-holidays.js",
+      "import": "./dist/nordic-holidays.mjs"
+    }
+  },
   "devDependencies": {
+    "tsup": "^8.2.4",
     "typescript": "^5.5.4"
   },
   "scripts": {
+    "build": "tsup src/nordic-holidays.ts --format cjs,esm --dts --clean --minify --dts-resolve",
+    "clean:mts": "find dist -name '*.d.mts' -type f -delete",
+    "postbuild": "npm run clean:mts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

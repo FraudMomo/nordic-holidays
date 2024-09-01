@@ -258,7 +258,11 @@ const checkForMoveableHoliday = (
   return "";
 };
 
-export const checkHoliday = (date: string, country: CountryCode): string => {
+export const checkHoliday = (date: string|Date, country: CountryCode): string => {
+  /* if date is of type Date, convert it to string */
+  if (date instanceof Date) {
+    date = date.toISOString().split("T")[0];
+  }
   const fixedHoliday = checkForFixedHoliday(date, country);
   if (fixedHoliday) {
     return fixedHoliday;
