@@ -1,1 +1,228 @@
-var l=(e,a)=>(e%a+a)%a,D=(e,a)=>Math.floor(e/a),S=e=>{let a=l(e,19),o=D(e,100),n=D(13+8*o,25),r=D(o,4),t=l(15-n+o-r,30),s=l(19*a+t,30),y=l(4+o-r,7),h=l(e,4),b=l(e,7),g=l(2*h+4*b+6*s+y,7);return(s===29&&g===6||s===28&&g===6&&a>10)&&(g=-1),22+s+g>31?`04-${(s+g-9).toString().padStart(2,"0")}`:`03-${(22+s+g).toString().padStart(2,"0")}`},c={se:{"New Year's Day":"Ny\xE5rsdagen",Epiphany:"Trettondedag Jul","Good Friday":"L\xE5ngfredagen","Easter Sunday":"P\xE5skdagen","Easter Monday":"Annandag p\xE5sk","International Workers' Day":"F\xF6rsta Maj","Ascension Day":"Kristi himmelsf\xE4rds dag",Pentecost:"Pingstdagen","National Day of Sweden":"Sveriges nationaldag","Midsummer's Day":"Midsommardagen","All Saints' Day":"Alla helgons dag","Christmas Eve":"Julafton","Christmas Day":"Juldagen","Second Day of Christmas":"Annandag Jul","New Year's Eve":"Ny\xE5rsafton"},dk:{"New Year's Day":"Nyt\xE5rsdag","Maundy Thursday":"Sk\xE6rtorsdag","Good Friday":"Langfredag","Easter Sunday":"P\xE5skedag","Easter Monday":"Anden p\xE5skedag","General Prayer Day":"Store bededag","Ascension Day":"Kristi Himmelfartsdag",Pentecost:"Pinsedag","Christmas Day":"Juledag","Second Day of Christmas":"Anden juledag","New Year's Eve":"Nyt\xE5rsaften"},no:{"New Year's Day":"F\xF8rste nytt\xE5rsdag","Maundy Thursday":"Skj\xE6rtorsdag","Good Friday":"Langfredag","Easter Sunday":"F\xF8rste p\xE5skedag","Easter Monday":"Andre p\xE5skedag","International Workers' Day":"F\xF8rste mai","Constitution Day":"Syttende mai","Ascension Day":"Kristi himmelfartsdag",Pentecost:"F\xF8rste pinsedag","Whit Monday":"Andre pinsedag","Christmas Day":"F\xF8rste juledag","Second Day of Christmas":"Andre juledag","New Year's Eve":"Nytt\xE5rsaften"}},d={general:{"New Year's Day":["01","01"],"Christmas Eve":["24","12"],"Christmas Day":["25","12"],"Second Day of Christmas":["26","12"],"New Year's Eve":["31","12"]},se:{"International Workers' Day":["01","05"],Epiphany:["06","01"],"National Day of Sweden":["06","06"]},dk:{},no:{"International Workers' Day":["01","05"],"Constitution Day":["17","05"]}},i={general:{"Good Friday":e=>u(e,-2),"Easter Sunday":e=>p(e),"Easter Monday":e=>u(e,1),"Ascension Day":e=>u(e,39),Pentecost:e=>u(e,49),"All Saints' Day":e=>f(e,6,["31","10"])},se:{"Midsummer's Day":e=>f(e,6,["20","06"])},dk:{"Maundy Thursday":e=>m(e,-3),"General Prayer Day":e=>m(e,26)},no:{"Maundy Thursday":e=>m(e,-3),"Whit Monday":e=>u(e,50)}},u=(e,a)=>{let o=p(e),[n,r]=o.split("-"),t=new Date(e,parseInt(n)-1,parseInt(r));return t.setDate(t.getDate()+a),`${(t.getMonth()+1).toString().padStart(2,"0")}-${t.getDate().toString().padStart(2,"0")}`},m=(e,a,o=4)=>{let n=p(e),[r,t]=n.split("-"),s=new Date(e,parseInt(r)-1,parseInt(t));for(s.setDate(s.getDate()+a);s.getDay()!==o;)s.setDate(s.getDate()+1);return`${(s.getMonth()+1).toString().padStart(2,"0")}-${s.getDate().toString().padStart(2,"0")}`},f=(e,a,o)=>{let[n,r]=o,t=new Date(e,parseInt(r)-1,parseInt(n));for(;t.getDay()!==a;)t.setDate(t.getDate()+1);return`${(t.getMonth()+1).toString().padStart(2,"0")}-${t.getDate().toString().padStart(2,"0")}`},p=e=>S(e),M=(e,a)=>{let[o,n,r]=e.split("-");for(let t in d.general){let[s,y]=d.general[t];if(s===r&&y===n)return c[a][t]}if(d[a])for(let t in d[a]){let[s,y]=d[a][t];if(s===r&&y===n)return c[a][t]}return""},k=(e,a)=>{let[o,n,r]=e.split("-");if(i.general)for(let t in i.general){let s=i.general[t](parseInt(o)),[y,h]=s.split("-");if(h===r&&y===n)return c[a][t]}if(i[a])for(let t in i[a]){let s=i[a][t](parseInt(o)),[y,h]=s.split("-");if(h===r&&y===n)return c[a][t]}return""},C=(e,a)=>{e instanceof Date&&(e=e.toISOString().split("T")[0]);let o=M(e,a);if(o)return o;let n=k(e,a);return n||""},H=(e,a)=>{let o=[];for(let n in d.general){let[r,t]=d.general[n];o.push(`${n}: ${r}-${t}`)}if(d[a])for(let n in d[a]){let[r,t]=d[a][n];o.push(`${n}: ${r}-${t}`)}for(let n in i.general){let r=i.general[n](e),[t,s]=r.split("-");o.push(`${n}: ${s}-${t}`)}if(i[a])for(let n in i[a]){let r=i[a][n](e),[t,s]=r.split("-");o.push(`${n}: ${s}-${t}`)}return o};export{C as checkHoliday,H as getHolidays};
+// src/nordic-holidays.ts
+var modulo = (a, b) => (a % b + b) % b;
+var performFloorDivision = (a, b) => Math.floor(a / b);
+var computus = (year) => {
+  const a = modulo(year, 19);
+  const k = performFloorDivision(year, 100);
+  const p = performFloorDivision(13 + 8 * k, 25);
+  const q = performFloorDivision(k, 4);
+  const M = modulo(15 - p + k - q, 30);
+  const d = modulo(19 * a + M, 30);
+  const N = modulo(4 + k - q, 7);
+  const b = modulo(year, 4);
+  const c = modulo(year, 7);
+  let e = modulo(2 * b + 4 * c + 6 * d + N, 7);
+  if (d === 29 && e === 6 || d === 28 && e === 6 && a > 10) {
+    e = -1;
+  }
+  if (22 + d + e > 31) {
+    return `04-${(d + e - 9).toString().padStart(2, "0")}`;
+  } else {
+    return `03-${(22 + d + e).toString().padStart(2, "0")}`;
+  }
+};
+var lang = {
+  se: {
+    "New Year's Day": "Ny\xE5rsdagen",
+    Epiphany: "Trettondedag Jul",
+    "Good Friday": "L\xE5ngfredagen",
+    "Easter Sunday": "P\xE5skdagen",
+    "Easter Monday": "Annandag p\xE5sk",
+    "International Workers' Day": "F\xF6rsta Maj",
+    "Ascension Day": "Kristi himmelsf\xE4rds dag",
+    Pentecost: "Pingstdagen",
+    "National Day of Sweden": "Sveriges nationaldag",
+    "Midsummer's Day": "Midsommardagen",
+    "All Saints' Day": "Alla helgons dag",
+    "Christmas Eve": "Julafton",
+    "Christmas Day": "Juldagen",
+    "Second Day of Christmas": "Annandag Jul",
+    "New Year's Eve": "Ny\xE5rsafton"
+  },
+  dk: {
+    "New Year's Day": "Nyt\xE5rsdag",
+    "Maundy Thursday": "Sk\xE6rtorsdag",
+    "Good Friday": "Langfredag",
+    "Easter Sunday": "P\xE5skedag",
+    "Easter Monday": "Anden p\xE5skedag",
+    "General Prayer Day": "Store bededag",
+    "Ascension Day": "Kristi Himmelfartsdag",
+    Pentecost: "Pinsedag",
+    "Christmas Day": "Juledag",
+    "Second Day of Christmas": "Anden juledag",
+    "New Year's Eve": "Nyt\xE5rsaften"
+  },
+  no: {
+    "New Year's Day": "F\xF8rste nytt\xE5rsdag",
+    "Maundy Thursday": "Skj\xE6rtorsdag",
+    "Good Friday": "Langfredag",
+    "Easter Sunday": "F\xF8rste p\xE5skedag",
+    "Easter Monday": "Andre p\xE5skedag",
+    "International Workers' Day": "F\xF8rste mai",
+    "Constitution Day": "Syttende mai",
+    "Ascension Day": "Kristi himmelfartsdag",
+    Pentecost: "F\xF8rste pinsedag",
+    "Whit Monday": "Andre pinsedag",
+    "Christmas Day": "F\xF8rste juledag",
+    "Second Day of Christmas": "Andre juledag",
+    "New Year's Eve": "Nytt\xE5rsaften"
+  }
+};
+var fixedHolidays = {
+  general: {
+    "New Year's Day": ["01", "01"],
+    "Christmas Eve": ["24", "12"],
+    "Christmas Day": ["25", "12"],
+    "Second Day of Christmas": ["26", "12"],
+    "New Year's Eve": ["31", "12"]
+  },
+  se: {
+    "International Workers' Day": ["01", "05"],
+    Epiphany: ["06", "01"],
+    "National Day of Sweden": ["06", "06"]
+  },
+  dk: {
+    // Add DK specific holidays here
+  },
+  no: {
+    "International Workers' Day": ["01", "05"],
+    "Constitution Day": ["17", "05"]
+  }
+};
+var moveableHolidays = {
+  general: {
+    "Good Friday": (year) => getEasterDateOffset(year, -2),
+    "Easter Sunday": (year) => getEaster(year),
+    "Easter Monday": (year) => getEasterDateOffset(year, 1),
+    "Ascension Day": (year) => getEasterDateOffset(year, 39),
+    Pentecost: (year) => getEasterDateOffset(year, 49),
+    "All Saints' Day": (year) => calculateWeekdayDate(year, 6, ["31", "10"])
+  },
+  se: {
+    "Midsummer's Day": (year) => calculateWeekdayDate(year, 6, ["20", "06"])
+  },
+  dk: {
+    "Maundy Thursday": (year) => calculateEasterBasedWeekday(year, -3),
+    "General Prayer Day": (year) => calculateEasterBasedWeekday(year, 26)
+  },
+  no: {
+    "Maundy Thursday": (year) => calculateEasterBasedWeekday(year, -3),
+    "Whit Monday": (year) => getEasterDateOffset(year, 50)
+  }
+};
+var getEasterDateOffset = (year, days) => {
+  const easter = getEaster(year);
+  const [month, day] = easter.split("-");
+  const easterDate = new Date(year, parseInt(month) - 1, parseInt(day));
+  easterDate.setDate(easterDate.getDate() + days);
+  return `${(easterDate.getMonth() + 1).toString().padStart(2, "0")}-${easterDate.getDate().toString().padStart(2, "0")}`;
+};
+var calculateEasterBasedWeekday = (year, days, weekday = 4) => {
+  const easter = getEaster(year);
+  const [month, day] = easter.split("-");
+  const easterDate = new Date(year, parseInt(month) - 1, parseInt(day));
+  easterDate.setDate(easterDate.getDate() + days);
+  while (easterDate.getDay() !== weekday) {
+    easterDate.setDate(easterDate.getDate() + 1);
+  }
+  return `${(easterDate.getMonth() + 1).toString().padStart(2, "0")}-${easterDate.getDate().toString().padStart(2, "0")}`;
+};
+var calculateWeekdayDate = (year, weekday, date) => {
+  const [day, month] = date;
+  const targetDate = new Date(year, parseInt(month) - 1, parseInt(day));
+  while (targetDate.getDay() !== weekday) {
+    targetDate.setDate(targetDate.getDate() + 1);
+  }
+  return `${(targetDate.getMonth() + 1).toString().padStart(2, "0")}-${targetDate.getDate().toString().padStart(2, "0")}`;
+};
+var getEaster = (year) => computus(year);
+var checkForFixedHoliday = (date, country) => {
+  const [year, month, day] = date.split("-");
+  for (const holiday in fixedHolidays.general) {
+    const [holidayDay, holidayMonth] = fixedHolidays.general[holiday];
+    if (holidayDay === day && holidayMonth === month) {
+      return lang[country][holiday];
+    }
+  }
+  if (fixedHolidays[country]) {
+    for (const holiday in fixedHolidays[country]) {
+      const [holidayDay, holidayMonth] = fixedHolidays[country][holiday];
+      if (holidayDay === day && holidayMonth === month) {
+        return lang[country][holiday];
+      }
+    }
+  }
+  return "";
+};
+var checkForMoveableHoliday = (date, country) => {
+  const [year, month, day] = date.split("-");
+  if (moveableHolidays.general) {
+    for (const holiday in moveableHolidays.general) {
+      const holidayDate = moveableHolidays.general[holiday](parseInt(year));
+      const [holidayMonth, holidayDay] = holidayDate.split("-");
+      if (holidayDay === day && holidayMonth === month) {
+        return lang[country][holiday];
+      }
+    }
+  }
+  if (moveableHolidays[country]) {
+    for (const holiday in moveableHolidays[country]) {
+      const holidayDate = moveableHolidays[country][holiday](parseInt(year));
+      const [holidayMonth, holidayDay] = holidayDate.split("-");
+      if (holidayDay === day && holidayMonth === month) {
+        return lang[country][holiday];
+      }
+    }
+  }
+  return "";
+};
+var checkHoliday = (date, country) => {
+  if (!date || !country) {
+    throw new Error("Date and country are required, e.g. checkHoliday('2024-12-25', 'se')");
+  }
+  if (date instanceof Date) {
+    date = date.toISOString().split("T")[0];
+  }
+  const fixedHoliday = checkForFixedHoliday(date, country);
+  if (fixedHoliday) {
+    return fixedHoliday;
+  }
+  const moveableHoliday = checkForMoveableHoliday(date, country);
+  if (moveableHoliday) {
+    return moveableHoliday;
+  }
+  return "";
+};
+var getHolidays = (year, country) => {
+  if (!year || !country) {
+    throw new Error("Year and country are required, e.g. getHolidays(2024, 'se')");
+  }
+  const holidays = {};
+  for (const holiday in fixedHolidays.general) {
+    const [holidayDay, holidayMonth] = fixedHolidays.general[holiday];
+    holidays[holiday] = `${holidayDay}-${holidayMonth}`;
+  }
+  if (fixedHolidays[country]) {
+    for (const holiday in fixedHolidays[country]) {
+      const [holidayDay, holidayMonth] = fixedHolidays[country][holiday];
+      holidays[holiday] = `${holidayDay}-${holidayMonth}`;
+    }
+  }
+  for (const holiday in moveableHolidays.general) {
+    const holidayDate = moveableHolidays.general[holiday](year);
+    const [holidayMonth, holidayDay] = holidayDate.split("-");
+    holidays[holiday] = `${holidayDay}-${holidayMonth}`;
+  }
+  if (moveableHolidays[country]) {
+    for (const holiday in moveableHolidays[country]) {
+      const holidayDate = moveableHolidays[country][holiday](year);
+      const [holidayMonth, holidayDay] = holidayDate.split("-");
+      holidays[holiday] = `${holidayDay}-${holidayMonth}`;
+    }
+  }
+  return holidays;
+};
+export {
+  checkHoliday,
+  getHolidays
+};

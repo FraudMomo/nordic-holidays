@@ -259,6 +259,9 @@ const checkForMoveableHoliday = (
 };
 
 export const checkHoliday = (date: string|Date, country: CountryCode): string => {
+  if(!date || !country) {
+    throw new Error("Date and country are required, e.g. checkHoliday('2024-12-25', 'se')");
+  }
   /* if date is of type Date, convert it to string */
   if (date instanceof Date) {
     date = date.toISOString().split("T")[0];
@@ -274,32 +277,36 @@ export const checkHoliday = (date: string|Date, country: CountryCode): string =>
   return "";
 };
 
-export const getHolidays = (year: number, country: CountryCode): string[] => {
-  const holidays: string[] = [];
+export const getHolidays = (year: number, country: CountryCode): { [key: string]: string } => {
+  if(!year || !country) {
+    throw new Error("Year and country are required, e.g. getHolidays(2024, 'se')");
+  }
+  const holidays: { [key: string]: string } = {};
+
   /* Fixed holidays general */
   for (const holiday in fixedHolidays.general) {
     const [holidayDay, holidayMonth] = fixedHolidays.general[holiday];
-    holidays.push(`${holiday}: ${holidayDay}-${holidayMonth}`);
+    holidays[holiday] = `${holidayDay}-${holidayMonth}`;
   }
   /* Fixed holidays specific to country */
   if (fixedHolidays[country]) {
     for (const holiday in fixedHolidays[country]) {
       const [holidayDay, holidayMonth] = fixedHolidays[country][holiday];
-      holidays.push(`${holiday}: ${holidayDay}-${holidayMonth}`);
+      holidays[holiday] = `${holidayDay}-${holidayMonth}`;
     }
   }
   /* Moveable holidays general */
   for (const holiday in moveableHolidays.general) {
     const holidayDate = moveableHolidays.general[holiday](year);
     const [holidayMonth, holidayDay] = holidayDate.split("-");
-    holidays.push(`${holiday}: ${holidayDay}-${holidayMonth}`);
+    holidays[holiday] = `${holidayDay}-${holidayMonth}`;
   }
   /* Moveable holidays specific to country */
   if (moveableHolidays[country]) {
     for (const holiday in moveableHolidays[country]) {
       const holidayDate = moveableHolidays[country][holiday](year);
       const [holidayMonth, holidayDay] = holidayDate.split("-");
-      holidays.push(`${holiday}: ${holidayDay}-${holidayMonth}`);
+      holidays[holiday] = `${holidayDay}-${holidayMonth}`;
     }
   }
   return holidays;

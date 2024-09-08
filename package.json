@@ -15,7 +15,7 @@
     "typescript": "^5.5.4"
   },
   "scripts": {
-    "build": "tsup src/nordic-holidays.ts --format cjs,esm --dts --clean --minify --dts-resolve",
+    "build": "tsup src/nordic-holidays.ts --format cjs,esm --dts --clean --dts-resolve",
     "clean:mts": "find dist -name '*.d.mts' -type f -delete",
     "postbuild": "npm run clean:mts",
     "test": "echo \"Error: no test specified\" && exit 1"
