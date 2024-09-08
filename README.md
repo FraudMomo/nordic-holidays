@@ -28,25 +28,24 @@ const holidayName = checkHoliday(date, countryCode) // Returns: "Juldagen"
 const invalidHolidayDate = checkHoliday('2024-12-03', 'se') // Returns empty string: ""
 
 const year = 2024
-const holidays = getHolidays(year, countryCode) // Returns the following array:
-[
-  "Holiday name: day-month"
-  "New Year's Day: 01-01",
-  'Christmas Eve: 24-12',
-  'Christmas Day: 25-12',
-  'Second Day of Christmas: 26-12',
-  "New Year's Eve: 31-12",
-  "International Workers' Day: 01-05",
-  'Epiphany: 06-01',
-  'National Day of Sweden: 06-06',
-  'Good Friday: 29-03',
-  'Easter Sunday: 31-03',
-  'Easter Monday: 01-04',
-  'Ascension Day: 09-05',
-  'Pentecost: 19-05',
-  "All Saints' Day: 02-11",
-  "Midsummer's Day: 22-06"
-]
+const holidays = getHolidays(year, countryCode) // Returns the following object:
+{
+  "New Year's Day": '01-01',
+  'Christmas Eve': '24-12',
+  'Christmas Day': '25-12',
+  'Second Day of Christmas': '26-12',
+  "New Year's Eve": '31-12',
+  "International Workers' Day": '01-05',
+  Epiphany: '06-01',
+  'National Day of Sweden': '06-06',
+  'Good Friday': '29-03',
+  'Easter Sunday': '31-03',
+  'Easter Monday': '01-04',
+  'Ascension Day': '09-05',
+  Pentecost: '19-05',
+  "All Saints' Day": '02-11',
+  "Midsummer's Day": '22-06'
+}
 ```
 ### Functions
 ```typescript
