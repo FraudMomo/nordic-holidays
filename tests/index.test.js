@@ -1,7 +1,7 @@
 const { checkHoliday, getHolidays } = require('../dist/nordic-holidays.js');
 const axios = require("axios");
 
-const yearsToTest = Array.from({ length: 10 }, (_, i) => 2020 + i);
+const yearsToTest = Array.from({ length: 50 }, (_, i) => 2020 + i);
 
 const fetchHolidays = async (year, country) => {
   let holidays = await axios.get(
@@ -104,6 +104,11 @@ describe("Denmark", function () {
       let holidays = await fetchHolidays(year, "DK");
 
       holidays.forEach((holiday) => {
+        /* Skip optional holidays */
+        if (!holiday.types.includes("Public")) {
+          return;
+        }
+
         /* Check date */
         if (!checkHoliday(new Date(holiday.date), "dk")) {
           /* Failed */

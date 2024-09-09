@@ -73,6 +73,7 @@ var lang = {
     "General Prayer Day": "Store bededag",
     "Ascension Day": "Kristi Himmelfartsdag",
     Pentecost: "Pinsedag",
+    "Whit Monday": "Anden pinsedag",
     "Christmas Day": "Juledag",
     "Second Day of Christmas": "Anden juledag",
     "New Year's Eve": "Nyt\xE5rsaften"
@@ -128,7 +129,11 @@ var moveableHolidays = {
   },
   dk: {
     "Maundy Thursday": (year) => calculateEasterBasedWeekday(year, -3),
-    "General Prayer Day": (year) => calculateEasterBasedWeekday(year, 26)
+    "General Prayer Day": (year) => (
+      // Fourth Friday after Easter
+      calculateEasterBasedWeekday(year, 26, 5)
+    ),
+    "Whit Monday": (year) => getEasterDateOffset(year, 50)
   },
   no: {
     "Maundy Thursday": (year) => calculateEasterBasedWeekday(year, -3),

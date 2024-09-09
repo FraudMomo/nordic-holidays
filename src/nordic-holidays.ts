@@ -91,6 +91,7 @@ const lang: TranslatedHolidays = {
     "General Prayer Day": "Store bededag",
     "Ascension Day": "Kristi Himmelfartsdag",
     Pentecost: "Pinsedag",
+    "Whit Monday": "Anden pinsedag",
     "Christmas Day": "Juledag",
     "Second Day of Christmas": "Anden juledag",
     "New Year's Eve": "Nytårsaften",
@@ -160,8 +161,10 @@ const moveableHolidays: {
   },
   dk: {
     "Maundy Thursday": (year: number) => calculateEasterBasedWeekday(year, -3),
-    "General Prayer Day": (year: number) =>
-      calculateEasterBasedWeekday(year, 26),
+    "General Prayer Day": (year: number) => // Discarded after 2023?
+      calculateEasterBasedWeekday(year, 26, 5),
+    "Whit Monday": (year: number) => getEasterDateOffset(year, 50),
+
   },
   no: {
     "Maundy Thursday": (year: number) => calculateEasterBasedWeekday(year, -3),
