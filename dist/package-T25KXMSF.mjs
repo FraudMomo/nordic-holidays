@@ -2,7 +2,7 @@ import "./chunk-VM2JCVBB.mjs";
 
 // package.json
 var name = "nordic-holidays";
-var version = "1.0.6";
+var version = "2.0.0";
 var main = "./dist/nordic-holidays.js";
 var module = "./dist/nordic-holidays.mjs";
 var types = "./dist/nordic-holidays.d.ts";
