@@ -11,6 +11,8 @@
     }
   },
   "devDependencies": {
+    "axios": "^1.7.7",
+    "mocha": "^10.7.3",
     "tsup": "^8.2.4",
     "typescript": "^5.5.4"
   },
@@ -18,7 +20,7 @@
     "build": "tsup src/nordic-holidays.ts --format cjs,esm --dts --clean --dts-resolve",
     "clean:mts": "find dist -name '*.d.mts' -type f -delete",
     "postbuild": "npm run clean:mts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha 'tests/**/*.js'"
   },
   "repository": {
     "type": "git",

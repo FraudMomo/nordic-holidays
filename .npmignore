@@ -1,4 +1,5 @@
 src/
+tests/
 *.map
 tsconfig.json
 .DS_Store
