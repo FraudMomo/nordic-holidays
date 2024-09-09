@@ -104,10 +104,7 @@ var moveableHolidays = {
   },
   dk: {
     "Maundy Thursday": (year) => calculateEasterBasedWeekday(year, -3),
-    "General Prayer Day": (year) => (
-      // Fourth Friday after Easter
-      calculateEasterBasedWeekday(year, 26, 5)
-    ),
+    "General Prayer Day": (year) => calculateEasterBasedWeekday(year, 26, 5),
     "Whit Monday": (year) => getEasterDateOffset(year, 50)
   },
   no: {
@@ -141,11 +138,12 @@ var calculateWeekdayDate = (year, weekday, date) => {
   return `${(targetDate.getMonth() + 1).toString().padStart(2, "0")}-${targetDate.getDate().toString().padStart(2, "0")}`;
 };
 var getEaster = (year) => computus(year);
-var checkForFixedHoliday = (date, country) => {
+var checkForFixedHoliday = (date, country, language = "local") => {
   const [year, month, day] = date.split("-");
   for (const holiday in fixedHolidays.general) {
     const [holidayDay, holidayMonth] = fixedHolidays.general[holiday];
     if (holidayDay === day && holidayMonth === month) {
+      if (language === "english") return holiday;
       return lang[country][holiday];
     }
   }
@@ -153,19 +151,21 @@ var checkForFixedHoliday = (date, country) => {
     for (const holiday in fixedHolidays[country]) {
       const [holidayDay, holidayMonth] = fixedHolidays[country][holiday];
       if (holidayDay === day && holidayMonth === month) {
+        if (language === "english") return holiday;
         return lang[country][holiday];
       }
     }
   }
   return "";
 };
-var checkForMoveableHoliday = (date, country) => {
+var checkForMoveableHoliday = (date, country, language = "local") => {
   const [year, month, day] = date.split("-");
   if (moveableHolidays.general) {
     for (const holiday in moveableHolidays.general) {
       const holidayDate = moveableHolidays.general[holiday](parseInt(year));
       const [holidayMonth, holidayDay] = holidayDate.split("-");
       if (holidayDay === day && holidayMonth === month) {
+        if (language === "english") return holiday;
         return lang[country][holiday];
       }
     }
@@ -175,56 +175,54 @@ var checkForMoveableHoliday = (date, country) => {
       const holidayDate = moveableHolidays[country][holiday](parseInt(year));
       const [holidayMonth, holidayDay] = holidayDate.split("-");
       if (holidayDay === day && holidayMonth === month) {
+        if (language === "english") return holiday;
         return lang[country][holiday];
       }
     }
   }
   return "";
 };
-var checkHoliday = (date, country) => {
+var checkHoliday = (date, country, language = "local") => {
   if (!date || !country) {
-    throw new Error("Date and country are required, e.g. checkHoliday('2024-12-25', 'se')");
+    throw new Error(
+      "Date and country are required, e.g. checkHoliday('2024-12-25', 'se')"
+    );
   }
   if (date instanceof Date) {
     date = date.toISOString().split("T")[0];
   }
-  const fixedHoliday = checkForFixedHoliday(date, country);
+  const fixedHoliday = checkForFixedHoliday(date, country, language);
   if (fixedHoliday) {
     return fixedHoliday;
   }
-  const moveableHoliday = checkForMoveableHoliday(date, country);
+  const moveableHoliday = checkForMoveableHoliday(date, country, language);
   if (moveableHoliday) {
     return moveableHoliday;
   }
   return "";
 };
-var getHolidays = (year, country) => {
+var getHolidays = (year, country, language = "local") => {
   if (!year || !country) {
-    throw new Error("Year and country are required, e.g. getHolidays(2024, 'se')");
+    throw new Error(
+      "Year and country are required, e.g. getHolidays(2024, 'se')"
+    );
   }
   const holidays = {};
-  for (const holiday in fixedHolidays.general) {
-    const [holidayDay, holidayMonth] = fixedHolidays.general[holiday];
-    holidays[holiday] = `${year}-${holidayMonth}-${holidayDay}`;
-  }
-  if (fixedHolidays[country]) {
-    for (const holiday in fixedHolidays[country]) {
-      const [holidayDay, holidayMonth] = fixedHolidays[country][holiday];
-      holidays[holiday] = `${year}-${holidayMonth}-${holidayDay}`;
-    }
-  }
-  for (const holiday in moveableHolidays.general) {
-    const holidayDate = moveableHolidays.general[holiday](year);
+  const addHoliday = (holiday, holidayDate) => {
     const [holidayMonth, holidayDay] = holidayDate.split("-");
-    holidays[holiday] = `${year}-${holidayMonth}-${holidayDay}`;
-  }
-  if (moveableHolidays[country]) {
-    for (const holiday in moveableHolidays[country]) {
-      const holidayDate = moveableHolidays[country][holiday](year);
-      const [holidayMonth, holidayDay] = holidayDate.split("-");
-      holidays[holiday] = `${year}-${holidayMonth}-${holidayDay}`;
+    const name = language === "local" ? lang[country][holiday] : holiday;
+    holidays[name] = `${year}-${holidayMonth}-${holidayDay}`;
+  };
+  const addHolidays = (holidaySet) => {
+    for (const holiday in holidaySet) {
+      const holidayDate = typeof holidaySet[holiday] === "function" ? holidaySet[holiday](year) : `${holidaySet[holiday][1]}-${holidaySet[holiday][0]}`;
+      addHoliday(holiday, holidayDate);
     }
-  }
+  };
+  addHolidays(fixedHolidays.general);
+  if (fixedHolidays[country]) addHolidays(fixedHolidays[country]);
+  addHolidays(moveableHolidays.general);
+  if (moveableHolidays[country]) addHolidays(moveableHolidays[country]);
   return holidays;
 };
 export {

@@ -24,11 +24,12 @@ import { checkHoliday, getHolidays } from "nordic-holidays";
 
 const date = '2024-12-25' or new Date('2024-12-25')
 const countryCode = 'se' or 'dk' or 'no'
-const holidayName = checkHoliday(date, countryCode) // Returns: "Juldagen"
+const language = 'english' or default 'local'
+const holidayName = checkHoliday(date, countryCode, language) // Returns: "Juldagen"
 const invalidHolidayDate = checkHoliday('2024-12-03', 'se') // Returns empty string: ""
 
 const year = 2024
-const holidays = getHolidays(year, countryCode) // Returns the following object:
+const holidays = getHolidays(year, countryCode, language) // Returns the following object:
 {
   "New Year's Day": '2024-01-01',
   'Christmas Eve': '2024-12-24',
@@ -49,8 +50,8 @@ const holidays = getHolidays(year, countryCode) // Returns the following object:
 ```
 ### Functions
 ```typescript
-checkHoliday(date: string | Date, country: CountryCode): string
-getHolidays(year: number, country: CountryCode): string[]
+checkHoliday(date: string | Date, country: "se" | "dk" | "no", language: 'english' | 'local'): string
+getHolidays(year: number, country: "se" | "dk" | "no", language: 'english' | 'local'): string[]
 ```
 
 ## Supported Holidays
