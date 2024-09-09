@@ -225,24 +225,24 @@ var getHolidays = (year, country) => {
   const holidays = {};
   for (const holiday in fixedHolidays.general) {
     const [holidayDay, holidayMonth] = fixedHolidays.general[holiday];
-    holidays[holiday] = `${holidayDay}-${holidayMonth}`;
+    holidays[holiday] = `${year}-${holidayMonth}-${holidayDay}`;
   }
   if (fixedHolidays[country]) {
     for (const holiday in fixedHolidays[country]) {
       const [holidayDay, holidayMonth] = fixedHolidays[country][holiday];
-      holidays[holiday] = `${holidayDay}-${holidayMonth}`;
+      holidays[holiday] = `${year}-${holidayMonth}-${holidayDay}`;
     }
   }
   for (const holiday in moveableHolidays.general) {
     const holidayDate = moveableHolidays.general[holiday](year);
     const [holidayMonth, holidayDay] = holidayDate.split("-");
-    holidays[holiday] = `${holidayDay}-${holidayMonth}`;
+    holidays[holiday] = `${year}-${holidayMonth}-${holidayDay}`;
   }
   if (moveableHolidays[country]) {
     for (const holiday in moveableHolidays[country]) {
       const holidayDate = moveableHolidays[country][holiday](year);
       const [holidayMonth, holidayDay] = holidayDate.split("-");
-      holidays[holiday] = `${holidayDay}-${holidayMonth}`;
+      holidays[holiday] = `${year}-${holidayMonth}-${holidayDay}`;
     }
   }
   return holidays;
