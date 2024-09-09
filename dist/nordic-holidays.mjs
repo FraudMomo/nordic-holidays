@@ -235,7 +235,7 @@ var getHolidays = (year, country, language = "local") => {
   const { default: semver } = yield import("semver");
   const { default: pkgJson } = yield import("package-json");
   const { default: semverDiff } = yield import("semver-diff");
-  const { name, version } = yield import("./package-T25KXMSF.mjs");
+  const { name, version } = yield import("./package-QJ2LCRWF.mjs");
   const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
   const checkUpdate = () => __async(void 0, null, function* () {
     const { version: latestVersion } = yield pkgJson(name);

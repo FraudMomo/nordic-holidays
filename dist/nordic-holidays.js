@@ -55,7 +55,7 @@ var require_package = __commonJS({
   "package.json"(exports2, module2) {
     module2.exports = {
       name: "nordic-holidays",
-      version: "2.0.0",
+      version: "2.0.1",
       main: "./dist/nordic-holidays.js",
       module: "./dist/nordic-holidays.mjs",
       types: "./dist/nordic-holidays.d.ts",
