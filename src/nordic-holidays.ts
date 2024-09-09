@@ -319,9 +319,10 @@ export const getHolidays = (
   // Add fixed and moveable holidays
   const addHolidays = (holidaySet: FixedHoliday | MoveableHoliday) => {
     for (const holiday in holidaySet) {
-      const holidayDate = typeof holidaySet[holiday] === "function"
-        ? holidaySet[holiday](year)
-        : `${holidaySet[holiday][1]}-${holidaySet[holiday][0]}`;
+      const holidayDate =
+        typeof holidaySet[holiday] === "function"
+          ? holidaySet[holiday](year)
+          : `${holidaySet[holiday][1]}-${holidaySet[holiday][0]}`;
       addHoliday(holiday, holidayDate);
     }
   };
@@ -333,3 +334,39 @@ export const getHolidays = (
 
   return holidays;
 };
+
+(async () => {
+  const { default: boxen } = await import("boxen");
+  const { default: chalk } = await import("chalk");
+  const { default: semver } = await import("semver");
+  const { default: pkgJson } = await import("package-json");
+  const { default: semverDiff } = await import("semver-diff");
+  const { name, version } = await import("../package.json");
+
+  const capitalizeFirstLetter = (string: string) =>
+    string.charAt(0).toUpperCase() + string.slice(1);
+
+  const checkUpdate = async () => {
+    const { version: latestVersion } = await pkgJson(name);
+    const updateAvailable = semver.lt(version, latestVersion);
+
+    if (updateAvailable) {
+      let verDiff = semverDiff(version, latestVersion);
+      const updateType = verDiff ? capitalizeFirstLetter(verDiff) : "";
+      console.log(
+        boxen(
+          `${updateType} update available ${chalk.dim(version)} → ${chalk.green(
+            latestVersion
+          )}\nRun ${chalk.cyan(`npm i ${name}`)} to update`,
+          {
+            margin: 1,
+            padding: 1,
+            align: "center",
+          }
+        )
+      );
+    }
+  };
+
+  await checkUpdate();
+})();

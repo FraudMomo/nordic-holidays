@@ -1,3 +1,7 @@
+import {
+  __async
+} from "./chunk-VM2JCVBB.mjs";
+
 // src/nordic-holidays.ts
 var modulo = (a, b) => (a % b + b) % b;
 var performFloorDivision = (a, b) => Math.floor(a / b);
@@ -225,6 +229,37 @@ var getHolidays = (year, country, language = "local") => {
   if (moveableHolidays[country]) addHolidays(moveableHolidays[country]);
   return holidays;
 };
+(() => __async(void 0, null, function* () {
+  const { default: boxen } = yield import("boxen");
+  const { default: chalk } = yield import("chalk");
+  const { default: semver } = yield import("semver");
+  const { default: pkgJson } = yield import("package-json");
+  const { default: semverDiff } = yield import("semver-diff");
+  const { name, version } = yield import("./package-TINZSPYF.mjs");
+  const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
+  const checkUpdate = () => __async(void 0, null, function* () {
+    const { version: latestVersion } = yield pkgJson(name);
+    const updateAvailable = semver.lt(version, latestVersion);
+    if (updateAvailable) {
+      let verDiff = semverDiff(version, latestVersion);
+      const updateType = verDiff ? capitalizeFirstLetter(verDiff) : "";
+      console.log(
+        boxen(
+          `${updateType} update available ${chalk.dim(version)} \u2192 ${chalk.green(
+            latestVersion
+          )}
+Run ${chalk.cyan(`npm i ${name}`)} to update`,
+          {
+            margin: 1,
+            padding: 1,
+            align: "center"
+          }
+        )
+      );
+    }
+  });
+  yield checkUpdate();
+}))();
 export {
   checkHoliday,
   getHolidays

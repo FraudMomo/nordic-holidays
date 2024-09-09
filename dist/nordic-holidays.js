@@ -1,8 +1,13 @@
 "use strict";
+var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __commonJS = (cb, mod) => function __require() {
+  return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+};
 var __export = (target, all) => {
   for (var name in all)
     __defProp(target, name, { get: all[name], enumerable: true });
@@ -15,7 +20,91 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+var __async = (__this, __arguments, generator) => {
+  return new Promise((resolve, reject) => {
+    var fulfilled = (value) => {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    };
+    var rejected = (value) => {
+      try {
+        step(generator.throw(value));
+      } catch (e) {
+        reject(e);
+      }
+    };
+    var step = (x) => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
+    step((generator = generator.apply(__this, __arguments)).next());
+  });
+};
+
+// package.json
+var require_package = __commonJS({
+  "package.json"(exports2, module2) {
+    module2.exports = {
+      name: "nordic-holidays",
+      version: "1.0.6",
+      main: "./dist/nordic-holidays.js",
+      module: "./dist/nordic-holidays.mjs",
+      types: "./dist/nordic-holidays.d.ts",
+      exports: {
+        ".": {
+          require: "./dist/nordic-holidays.js",
+          import: "./dist/nordic-holidays.mjs"
+        }
+      },
+      devDependencies: {
+        "@types/semver": "^7.5.8",
+        axios: "^1.7.7",
+        mocha: "^10.7.3",
+        tsup: "^8.2.4",
+        typescript: "^5.5.4"
+      },
+      scripts: {
+        build: "tsup src/nordic-holidays.ts --format cjs,esm --dts --clean --dts-resolve",
+        "clean:mts": "find dist -name '*.d.mts' -type f -delete",
+        postbuild: "npm run clean:mts",
+        test: "mocha 'tests/**/*.js'"
+      },
+      repository: {
+        type: "git",
+        url: "git+https://github.com/FraudMomo/nordic-holidays.git"
+      },
+      keywords: [
+        "javascript",
+        "typescript",
+        "nordic",
+        "holidays"
+      ],
+      author: "FraudMomo",
+      license: "MIT",
+      bugs: {
+        url: "https://github.com/FraudMomo/nordic-holidays/issues"
+      },
+      homepage: "https://github.com/FraudMomo/nordic-holidays#readme",
+      description: "",
+      dependencies: {
+        boxen: "^8.0.1",
+        chalk: "^5.3.0",
+        "package-json": "^10.0.1",
+        semver: "^7.6.3",
+        "semver-diff": "^4.0.0"
+      }
+    };
+  }
+});
 
 // src/nordic-holidays.ts
 var nordic_holidays_exports = {};
@@ -250,6 +339,37 @@ var getHolidays = (year, country, language = "local") => {
   if (moveableHolidays[country]) addHolidays(moveableHolidays[country]);
   return holidays;
 };
+(() => __async(void 0, null, function* () {
+  const { default: boxen } = yield import("boxen");
+  const { default: chalk } = yield import("chalk");
+  const { default: semver } = yield import("semver");
+  const { default: pkgJson } = yield import("package-json");
+  const { default: semverDiff } = yield import("semver-diff");
+  const { name, version } = yield Promise.resolve().then(() => __toESM(require_package()));
+  const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
+  const checkUpdate = () => __async(void 0, null, function* () {
+    const { version: latestVersion } = yield pkgJson(name);
+    const updateAvailable = semver.lt(version, latestVersion);
+    if (updateAvailable) {
+      let verDiff = semverDiff(version, latestVersion);
+      const updateType = verDiff ? capitalizeFirstLetter(verDiff) : "";
+      console.log(
+        boxen(
+          `${updateType} update available ${chalk.dim(version)} \u2192 ${chalk.green(
+            latestVersion
+          )}
+Run ${chalk.cyan(`npm i ${name}`)} to update`,
+          {
+            margin: 1,
+            padding: 1,
+            align: "center"
+          }
+        )
+      );
+    }
+  });
+  yield checkUpdate();
+}))();
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   checkHoliday,
